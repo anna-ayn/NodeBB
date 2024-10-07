@@ -12,6 +12,7 @@ import db from '../database';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 import pubsub from '../pubsub';
 
+
 // Interface for the structure of navigation items
 interface NavigationItem {
     order?: string;
@@ -69,7 +70,7 @@ admin.getAdmin = async function (): Promise<{ enabled: NavigationItem[], availab
         admin.get(),
         getAvailable(),
     ]);
-    return { enabled, available };
+    return { enabled: enabled, available: available };
 };
 
 const fieldsToEscape: (keyof NavigationItem)[] = ['iconClass', 'class', 'route', 'id', 'text', 'textClass', 'title'];
@@ -102,8 +103,10 @@ admin.get = async function (): Promise<NavigationItem[]> {
             } catch (err) {
                 if (err instanceof Error) {
                     winston.error(err.stack);
-                    item.groups = [];
+                } else {
+                    winston.error('Unknown error', err);
                 }
+                item.groups = [];
             }
         }
         item.groups = item.groups || [];
@@ -134,5 +137,6 @@ async function getAvailable(): Promise<NavigationItem[]> {
 }
 
 require('../promisify')(admin);
+module.exports = admin;
 
-export default admin;
+
