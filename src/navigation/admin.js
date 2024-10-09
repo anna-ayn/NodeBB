@@ -25,6 +25,7 @@ const promisify_1 = __importDefault(require("../promisify"));
 const navigation_json_1 = __importDefault(require("../../install/data/navigation.json"));
 const admin = {};
 let cache = null;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 pubsub_1.default.on('admin:navigation:save', () => {
     cache = null;
 });
@@ -41,10 +42,15 @@ admin.save = function (data) {
         });
         cache = null;
         pubsub_1.default.publish('admin:navigation:save');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const ids = yield database_1.default.getSortedSetRange('navigation:enabled', 0, -1);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         yield database_1.default.deleteAll(ids.map(id => `navigation:enabled:${id}`));
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         yield database_1.default.setObjectBulk(bulkSet);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         yield database_1.default.delete('navigation:enabled');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         yield database_1.default.sortedSetAdd('navigation:enabled', order, order);
     });
 };
@@ -92,7 +98,9 @@ admin.get = function () {
         if (cache) {
             return cache.map(item => (Object.assign({}, item)));
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const ids = yield database_1.default.getSortedSetRange('navigation:enabled', 0, -1);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const data = yield database_1.default.getObjects(ids.map(id => `navigation:enabled:${id}`));
         cache = data.filter(Boolean).map((item) => {
             if (item.hasOwnProperty('groups')) {

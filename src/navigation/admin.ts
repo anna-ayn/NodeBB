@@ -39,6 +39,7 @@ interface Admin {
 const admin: Admin = {} as Admin;
 let cache: NavigationItem[] | null = null;
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 pubsub.on('admin:navigation:save', () => {
 	cache = null;
 });
@@ -56,10 +57,15 @@ admin.save = async function (data: NavigationItem[]): Promise<void> {
 
 	cache = null;
 	pubsub.publish('admin:navigation:save');
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.deleteAll(ids.map(id => `navigation:enabled:${id}`));
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.setObjectBulk(bulkSet);
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.delete('navigation:enabled');
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.sortedSetAdd('navigation:enabled', order, order);
 };
 
@@ -108,7 +114,9 @@ admin.get = async function (): Promise<NavigationItem[]> {
 	if (cache) {
 		return cache.map(item => ({ ...item }));
 	}
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	const data = await db.getObjects(ids.map(id => `navigation:enabled:${id}`)) as NavigationItem[];
 	cache = data.filter(Boolean).map((item) => {
 		if (item.hasOwnProperty('groups')) {
