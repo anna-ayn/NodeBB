@@ -120,10 +120,10 @@ admin.get = async function (): Promise<NavigationItem[]> {
 	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	const data = await db.getObjects(ids.map(id => `navigation:enabled:${id}`)) as NavigationItem[];
-	cache = data.filter(Boolean).map((item) => {
+	cache = data.filter(Boolean).map((item: NavigationItem) => {
 		if (item.hasOwnProperty('groups')) {
 			try {
-				item.groups = JSON.parse(item.groups as string);
+				item.groups = JSON.parse(item.groups as string) as string[];
 			} catch (err) {
 				if (err instanceof Error) {
 					winston.error(err.stack);
@@ -144,7 +144,7 @@ admin.get = async function (): Promise<NavigationItem[]> {
 	return cache.map(item => ({ ...item }));
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 promisify(admin);
 
-export { };
 export default admin;

@@ -129,5 +129,6 @@ admin.get = function () {
         return cache.map(item => (Object.assign({}, item)));
     });
 };
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 (0, promisify_1.default)(admin);
 exports.default = admin;
