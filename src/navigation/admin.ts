@@ -13,27 +13,27 @@ import navigationData from '../../install/data/navigation.json';
 
 // Interface for the structure of navigation items
 interface NavigationItem {
-    order?: string;
-    groups?: string | string[];
-    iconClass?: string;
-    class?: string;
-    route?: string;
-    id?: string;
-    text?: string;
-    textClass?: string;
-    title?: string;
-    core?: boolean;
-    enabled?: boolean;
-    [key: string]: any;
+	order?: string;
+	groups?: string | string[];
+	iconClass?: string;
+	class?: string;
+	route?: string;
+	id?: string;
+	text?: string;
+	textClass?: string;
+	title?: string;
+	core?: boolean;
+	enabled?: boolean;
+	[key: string]: string | string[] | boolean | undefined;
 }
 
 // Interface for the Admin
 interface Admin {
-    save: (data: NavigationItem[]) => Promise<void>;
-    getAdmin: () => Promise<{ enabled: NavigationItem[], available: NavigationItem[] }>;
-    escapeFields: (navItems: NavigationItem[]) => void;
-    unescapeFields: (navItems: NavigationItem[]) => void;
-    get: () => Promise<NavigationItem[]>;
+	save: (data: NavigationItem[]) => Promise<void>;
+	getAdmin: () => Promise<{ enabled: NavigationItem[], available: NavigationItem[] }>;
+	escapeFields: (navItems: NavigationItem[]) => void;
+	unescapeFields: (navItems: NavigationItem[]) => void;
+	get: () => Promise<NavigationItem[]>;
 }
 
 const admin: Admin = {} as Admin;
@@ -56,7 +56,7 @@ admin.save = async function (data: NavigationItem[]): Promise<void> {
 
 	cache = null;
 	pubsub.publish('admin:navigation:save');
-	const ids: string[] = await db.getSortedSetRange('navigation:enabled', 0, -1);
+	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
 	await db.deleteAll(ids.map(id => `navigation:enabled:${id}`));
 	await db.setObjectBulk(bulkSet);
 	await db.delete('navigation:enabled');
@@ -70,7 +70,7 @@ async function getAvailable(): Promise<NavigationItem[]> {
 		return item;
 	});
 
-	const navItems: NavigationItem[] = await plugins.hooks.fire('filter:navigation.available', core);
+	const navItems = await plugins.hooks.fire('filter:navigation.available', core) as NavigationItem[];
 	navItems.forEach((item) => {
 		if (item && !item.hasOwnProperty('enabled')) {
 			item.enabled = true;
@@ -108,8 +108,8 @@ admin.get = async function (): Promise<NavigationItem[]> {
 	if (cache) {
 		return cache.map(item => ({ ...item }));
 	}
-	const ids: string[] = await db.getSortedSetRange('navigation:enabled', 0, -1);
-	const data: NavigationItem[] = await db.getObjects(ids.map(id => `navigation:enabled:${id}`));
+	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
+	const data = await db.getObjects(ids.map(id => `navigation:enabled:${id}`)) as NavigationItem[];
 	cache = data.filter(Boolean).map((item) => {
 		if (item.hasOwnProperty('groups')) {
 			try {
