@@ -1,13 +1,19 @@
-const validator = require('validator');
-const winston = require('winston');
+
+
+import validator from 'validator';
+import winston from 'winston';
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-const plugins = require('../plugins');
+import plugins from '../plugins';
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-const db = require('../database');
+import db from '../database';
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-const pubsub = require('../pubsub');
+import pubsub from '../pubsub';
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-const promisify = require('../promisify');
+import promisify from '../promisify';
 
 // Interface for the structure of navigation items
 interface NavigationItem {
@@ -134,6 +140,5 @@ admin.get = async function (): Promise<NavigationItem[]> {
 
 promisify(admin);
 
-module.exports = admin;
-
-
+export { };
+export default admin;
