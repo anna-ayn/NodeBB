@@ -20,8 +20,6 @@ const plugins_1 = __importDefault(require("../plugins"));
 const database_1 = __importDefault(require("../database"));
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const pubsub_1 = __importDefault(require("../pubsub"));
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-const promisify_1 = __importDefault(require("../promisify"));
 const admin = {};
 let cache = null;
 pubsub_1.default.on('admin:navigation:save', () => {
@@ -47,22 +45,6 @@ admin.save = function (data) {
         yield database_1.default.sortedSetAdd('navigation:enabled', order, order);
     });
 };
-function getAvailable() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const core = require('../../install/data/navigation.json').map((item) => {
-            item.core = true;
-            item.id = item.id || '';
-            return item;
-        });
-        const navItems = yield plugins_1.default.hooks.fire('filter:navigation.available', core);
-        navItems.forEach((item) => {
-            if (item && !item.hasOwnProperty('enabled')) {
-                item.enabled = true;
-            }
-        });
-        return navItems;
-    });
-}
 admin.getAdmin = function () {
     return __awaiter(this, void 0, void 0, function* () {
         const [enabled, available] = yield Promise.all([
@@ -73,6 +55,8 @@ admin.getAdmin = function () {
     });
 };
 const fieldsToEscape = ['iconClass', 'class', 'route', 'id', 'text', 'textClass', 'title'];
+admin.escapeFields = (navItems) => toggleEscape(navItems, true);
+admin.unescapeFields = (navItems) => toggleEscape(navItems, false);
 function toggleEscape(navItems, flag) {
     navItems.forEach((item) => {
         if (item) {
@@ -84,8 +68,6 @@ function toggleEscape(navItems, flag) {
         }
     });
 }
-admin.escapeFields = (navItems) => toggleEscape(navItems, true);
-admin.unescapeFields = (navItems) => toggleEscape(navItems, false);
 admin.get = function () {
     return __awaiter(this, void 0, void 0, function* () {
         if (cache) {
@@ -118,5 +100,21 @@ admin.get = function () {
         return cache.map(item => (Object.assign({}, item)));
     });
 };
-(0, promisify_1.default)(admin);
-exports.default = admin;
+function getAvailable() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const core = require('../../install/data/navigation.json').map((item) => {
+            item.core = true;
+            item.id = item.id || '';
+            return item;
+        });
+        const navItems = yield plugins_1.default.hooks.fire('filter:navigation.available', core);
+        navItems.forEach((item) => {
+            if (item && !item.hasOwnProperty('enabled')) {
+                item.enabled = true;
+            }
+        });
+        return navItems;
+    });
+}
+require('../promisify')(admin);
+module.exports = admin;

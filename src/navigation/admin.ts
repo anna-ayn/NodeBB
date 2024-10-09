@@ -1,5 +1,3 @@
-
-
 import validator from 'validator';
 import winston from 'winston';
 
@@ -139,5 +137,7 @@ admin.get = async function (): Promise<NavigationItem[]> {
 };
 
 promisify(admin);
-export default admin;
+
+module.exports = admin;
+
 
