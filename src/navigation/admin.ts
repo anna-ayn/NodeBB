@@ -1,17 +1,13 @@
-import validator from 'validator';
-import winston from 'winston';
-
+const validator = require('validator');
+const winston = require('winston');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-import plugins from '../plugins';
-
+const plugins = require('../plugins');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-import db from '../database';
-
+const db = require('../database');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-import pubsub from '../pubsub';
-
+const pubsub = require('../pubsub');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-import promisify from '../promisify';
+const promisify = require('../promisify');
 
 // Interface for the structure of navigation items
 interface NavigationItem {
