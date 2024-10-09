@@ -41,6 +41,7 @@ admin.save = function (data) {
             bulkSet.push([`navigation:enabled:${item.order}`, item]);
         });
         cache = null;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         pubsub_1.default.publish('admin:navigation:save');
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const ids = yield database_1.default.getSortedSetRange('navigation:enabled', 0, -1);
@@ -61,6 +62,7 @@ function getAvailable() {
             item.id = item.id || '';
             return item;
         });
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const navItems = yield plugins_1.default.hooks.fire('filter:navigation.available', core);
         navItems.forEach((item) => {
             if (item && !item.hasOwnProperty('enabled')) {

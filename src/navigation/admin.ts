@@ -56,6 +56,7 @@ admin.save = async function (data: NavigationItem[]): Promise<void> {
 	});
 
 	cache = null;
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	pubsub.publish('admin:navigation:save');
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
@@ -76,6 +77,7 @@ async function getAvailable(): Promise<NavigationItem[]> {
 		return item;
 	});
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	const navItems = await plugins.hooks.fire('filter:navigation.available', core) as NavigationItem[];
 	navItems.forEach((item) => {
 		if (item && !item.hasOwnProperty('enabled')) {
