@@ -9,7 +9,7 @@ import pubsub from '../pubsub';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 import promisify from '../promisify';
 
-import navigationData from '../../install/data/navigation.json';
+// import navigationData from '../../install/data/navigation.json';
 
 // Interface for the structure of navigation items
 interface NavigationItem {
@@ -71,7 +71,7 @@ admin.save = async function (data: NavigationItem[]): Promise<void> {
 };
 
 async function getAvailable(): Promise<NavigationItem[]> {
-	const core: NavigationItem[] = navigationData.map((item: NavigationItem) => {
+	const core: NavigationItem[] = require('../../install/data/navigation.json').map((item: NavigationItem) => {
 		item.core = true;
 		item.id = item.id || '';
 		return item;

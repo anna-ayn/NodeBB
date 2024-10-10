@@ -22,7 +22,6 @@ const database_1 = __importDefault(require("../database"));
 const pubsub_1 = __importDefault(require("../pubsub"));
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const promisify_1 = __importDefault(require("../promisify"));
-const navigation_json_1 = __importDefault(require("../../install/data/navigation.json"));
 const admin = {};
 let cache = null;
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -57,7 +56,7 @@ admin.save = function (data) {
 };
 function getAvailable() {
     return __awaiter(this, void 0, void 0, function* () {
-        const core = navigation_json_1.default.map((item) => {
+        const core = require('../../install/data/navigation.json').map((item) => {
             item.core = true;
             item.id = item.id || '';
             return item;
