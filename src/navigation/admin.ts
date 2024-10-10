@@ -1,12 +1,10 @@
-
-
-const validator = require('validator');
-const winston = require('winston');
-
-const plugins = require('../plugins');
-const db = require('../database');
-const pubsub = require('../pubsub');
-
+/* eslint-disable import/no-import-module-exports */
+import validator from 'validator';
+import winston from 'winston';
+import plugins from '../plugins';
+import db from '../database';
+import pubsub from '../pubsub';
+import promisify from '../promisify';
 
 // Interface for the structure of navigation items
 interface NavigationItem {
@@ -127,6 +125,7 @@ async function getAvailable() {
 	return navItems;
 }
 
-require('../promisify')(admin);
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+promisify(admin);
 
 module.exports = admin;
