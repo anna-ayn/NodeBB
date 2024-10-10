@@ -37,10 +37,15 @@ admin.save = function (data) {
         });
         cache = null;
         pubsub_1.default.publish('admin:navigation:save');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const ids = yield database_1.default.getSortedSetRange('navigation:enabled', 0, -1);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         yield database_1.default.deleteAll(ids.map(id => `navigation:enabled:${id}`));
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         yield database_1.default.setObjectBulk(bulkSet);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         yield database_1.default.delete('navigation:enabled');
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         yield database_1.default.sortedSetAdd('navigation:enabled', order, order);
     });
 };

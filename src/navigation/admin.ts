@@ -38,9 +38,9 @@ pubsub.on('admin:navigation:save', () => {
 	cache = null;
 });
 
-admin.save = async function (data) {
-	const order = Object.keys(data);
-	const bulkSet = [];
+admin.save = async function (data: NavigationItem[]): Promise<void> {
+	const order: string[] = Object.keys(data);
+	const bulkSet: [string, NavigationItem][] = [];
 	data.forEach((item, index) => {
 		item.order = order[index];
 		if (item.hasOwnProperty('groups')) {
@@ -51,10 +51,15 @@ admin.save = async function (data) {
 
 	cache = null;
 	pubsub.publish('admin:navigation:save');
-	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1);
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.deleteAll(ids.map(id => `navigation:enabled:${id}`));
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.setObjectBulk(bulkSet);
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.delete('navigation:enabled');
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.sortedSetAdd('navigation:enabled', order, order);
 };
 
