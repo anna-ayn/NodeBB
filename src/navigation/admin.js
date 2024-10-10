@@ -68,7 +68,9 @@ admin.get = function () {
         if (cache) {
             return cache.map(item => (Object.assign({}, item)));
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const ids = yield database_1.default.getSortedSetRange('navigation:enabled', 0, -1);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const data = yield database_1.default.getObjects(ids.map(id => `navigation:enabled:${id}`));
         cache = data.filter(Boolean).map((item) => {
             if (item.hasOwnProperty('groups')) {
@@ -76,7 +78,12 @@ admin.get = function () {
                     item.groups = JSON.parse(item.groups);
                 }
                 catch (err) {
-                    winston_1.default.error(err.stack);
+                    if (err instanceof Error) {
+                        winston_1.default.error(err.stack);
+                    }
+                    else {
+                        winston_1.default.error('Unknown error', err);
+                    }
                     item.groups = [];
                 }
             }

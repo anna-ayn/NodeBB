@@ -80,18 +80,24 @@ function toggleEscape(navItems: NavigationItem[], flag: boolean): void {
 admin.escapeFields = navItems => toggleEscape(navItems, true);
 admin.unescapeFields = navItems => toggleEscape(navItems, false);
 
-admin.get = async function () {
+admin.get = async function (): Promise<NavigationItem[]> {
 	if (cache) {
 		return cache.map(item => ({ ...item }));
 	}
-	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1);
-	const data = await db.getObjects(ids.map(id => `navigation:enabled:${id}`));
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+	const data = await db.getObjects(ids.map(id => `navigation:enabled:${id}`)) as NavigationItem[];
 	cache = data.filter(Boolean).map((item) => {
 		if (item.hasOwnProperty('groups')) {
 			try {
-				item.groups = JSON.parse(item.groups);
+				item.groups = JSON.parse(item.groups as string) as string[];
 			} catch (err) {
-				winston.error(err.stack);
+				if (err instanceof Error) {
+					winston.error(err.stack);
+				} else {
+					winston.error('Unknown error', err);
+				}
 				item.groups = [];
 			}
 		}
