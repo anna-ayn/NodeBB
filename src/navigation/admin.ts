@@ -5,6 +5,7 @@ import plugins from '../plugins';
 import db from '../database';
 import pubsub from '../pubsub';
 import promisify from '../promisify';
+import navigationData from '../../install/data/navigation.json';
 
 // Interface for the structure of navigation items
 interface NavigationItem {
@@ -113,7 +114,7 @@ admin.get = async function (): Promise<NavigationItem[]> {
 };
 
 async function getAvailable(): Promise<NavigationItem[]> {
-	const core: NavigationItem[] = require('../../install/data/navigation.json').map((item: NavigationItem) => {
+	const core: NavigationItem[] = navigationData.map((item: NavigationItem) => {
 		item.core = true;
 		item.id = item.id || '';
 		return item;
