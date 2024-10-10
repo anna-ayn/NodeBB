@@ -20,7 +20,7 @@ interface NavigationItem {
 	title?: string;
 	core?: boolean;
 	enabled?: boolean;
-	[key: string]: any;
+	[key: string]: string | string[] | boolean | undefined;
 }
 
 // Interface for the Admin
@@ -141,5 +141,5 @@ admin.getAdmin = async function (): Promise<{ enabled: NavigationItem[], availab
 
 require('../promisify')(admin);
 
-export default admin;
+module.exports = admin;
 
