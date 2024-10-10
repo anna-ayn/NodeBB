@@ -18,7 +18,7 @@ const winston_1 = __importDefault(require("winston"));
 const plugins_1 = __importDefault(require("../plugins"));
 const database_1 = __importDefault(require("../database"));
 const pubsub_1 = __importDefault(require("../pubsub"));
-const promisify_1 = require("../promisify");
+const promisify_1 = __importDefault(require("../promisify"));
 const admin = {};
 let cache = null;
 pubsub_1.default.on('admin:navigation:save', () => {
@@ -124,5 +124,5 @@ admin.getAdmin = function () {
     });
 };
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-(0, promisify_1.promisify)(admin);
+(0, promisify_1.default)(admin);
 module.exports = admin;

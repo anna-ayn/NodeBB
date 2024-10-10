@@ -4,7 +4,7 @@ import winston from 'winston';
 import plugins from '../plugins';
 import db from '../database';
 import pubsub from '../pubsub';
-import { promisify } from '../promisify';
+import promisify from '../promisify';
 
 // Interface for the structure of navigation items
 interface NavigationItem {
