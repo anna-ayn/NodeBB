@@ -5,13 +5,14 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
   },
   "include": [
     "public/src/**/*",
-    "src/**/*", 
+    "src/**/*",
     "test/**/*",
   ],
-  "exclude":[
+  "exclude": [
     "node_modules",
   ]
 }
