@@ -6,9 +6,6 @@ import plugins from '../plugins';
 import db from '../database';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 import pubsub from '../pubsub';
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-import { promisify } from '../promisify';
-
 
 // Interface for the structure of navigation items
 interface NavigationItem {
@@ -141,8 +138,8 @@ admin.getAdmin = async function (): Promise<{ enabled: NavigationItem[], availab
 	return { enabled: enabled, available: available };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-promisify(admin);
+
+require('../promisify')(admin);
 
 module.exports = admin;
 
