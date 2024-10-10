@@ -12,7 +12,7 @@ const winston = require('winston');
 const plugins = require('../plugins');
 const db = require('../database');
 const pubsub = require('../pubsub');
-const admin = module.exports;
+const admin = {};
 let cache = null;
 pubsub.on('admin:navigation:save', () => {
     cache = null;
@@ -104,3 +104,4 @@ function getAvailable() {
     });
 }
 require('../promisify')(admin);
+module.exports = admin;

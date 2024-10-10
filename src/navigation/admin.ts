@@ -7,8 +7,34 @@ const plugins = require('../plugins');
 const db = require('../database');
 const pubsub = require('../pubsub');
 
-const admin = module.exports;
-let cache = null;
+
+// Interface for the structure of navigation items
+interface NavigationItem {
+	order?: string;
+	groups?: string | string[];
+	iconClass?: string;
+	class?: string;
+	route?: string;
+	id?: string;
+	text?: string;
+	textClass?: string;
+	title?: string;
+	core?: boolean;
+	enabled?: boolean;
+	[key: string]: string | string[] | boolean | undefined;
+}
+
+// Interface for the Admin
+interface Admin {
+	save: (data: NavigationItem[]) => Promise<void>;
+	getAdmin: () => Promise<{ enabled: NavigationItem[], available: NavigationItem[] }>;
+	escapeFields: (navItems: NavigationItem[]) => void;
+	unescapeFields: (navItems: NavigationItem[]) => void;
+	get: () => Promise<NavigationItem[]>;
+}
+
+const admin: Admin = {} as Admin;
+let cache: NavigationItem[] | null = null;
 
 pubsub.on('admin:navigation:save', () => {
 	cache = null;
@@ -102,3 +128,5 @@ async function getAvailable() {
 }
 
 require('../promisify')(admin);
+
+module.exports = admin;
