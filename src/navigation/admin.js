@@ -125,4 +125,4 @@ admin.getAdmin = function () {
     });
 };
 require('../promisify')(admin);
-module.exports = admin;
+exports.default = admin;

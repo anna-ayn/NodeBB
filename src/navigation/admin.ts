@@ -141,5 +141,5 @@ admin.getAdmin = async function (): Promise<{ enabled: NavigationItem[], availab
 
 require('../promisify')(admin);
 
-module.exports = admin;
+export default admin;
 
