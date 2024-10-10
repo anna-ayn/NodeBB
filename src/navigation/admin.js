@@ -19,6 +19,7 @@ const plugins_1 = __importDefault(require("../plugins"));
 const database_1 = __importDefault(require("../database"));
 const pubsub_1 = __importDefault(require("../pubsub"));
 const promisify_1 = __importDefault(require("../promisify"));
+const navigation_json_1 = __importDefault(require("../../install/data/navigation.json"));
 const admin = {};
 let cache = null;
 pubsub_1.default.on('admin:navigation:save', () => {
@@ -99,7 +100,7 @@ admin.get = function () {
 };
 function getAvailable() {
     return __awaiter(this, void 0, void 0, function* () {
-        const core = require('../../install/data/navigation.json').map((item) => {
+        const core = navigation_json_1.default.map((item) => {
             item.core = true;
             item.id = item.id || '';
             return item;

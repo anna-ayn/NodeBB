@@ -5,6 +5,7 @@ import plugins from '../plugins';
 import db from '../database';
 import pubsub from '../pubsub';
 import promisify from '../promisify';
+import navigationData from '../../install/data/navigation.json';
 
 // Interface for the structure of navigation items
 interface NavigationItem {
@@ -112,14 +113,14 @@ admin.get = async function (): Promise<NavigationItem[]> {
 	return cache.map(item => ({ ...item }));
 };
 
-async function getAvailable() {
-	const core = require('../../install/data/navigation.json').map((item) => {
+async function getAvailable(): Promise<NavigationItem[]> {
+	const core: NavigationItem[] = navigationData.map((item: NavigationItem) => {
 		item.core = true;
 		item.id = item.id || '';
 		return item;
 	});
 
-	const navItems = await plugins.hooks.fire('filter:navigation.available', core);
+	const navItems = await plugins.hooks.fire('filter:navigation.available', core) as NavigationItem[];
 	navItems.forEach((item) => {
 		if (item && !item.hasOwnProperty('enabled')) {
 			item.enabled = true;
