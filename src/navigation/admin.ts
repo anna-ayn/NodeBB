@@ -4,6 +4,7 @@ import winston from 'winston';
 import plugins from '../plugins';
 import db from '../database';
 import pubsub from '../pubsub';
+import { promisify } from '../promisify';
 
 // Interface for the structure of navigation items
 interface NavigationItem {
@@ -136,8 +137,8 @@ admin.getAdmin = async function (): Promise<{ enabled: NavigationItem[], availab
 	return { enabled: enabled, available: available };
 };
 
-
-require('../promisify')(admin);
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+promisify(admin);
 
 module.exports = admin;
 
