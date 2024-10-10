@@ -1,16 +1,13 @@
-
-
 import validator from 'validator';
 import winston from 'winston';
-
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 import plugins from '../plugins';
-
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 import db from '../database';
-
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 import pubsub from '../pubsub';
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+import { promisify } from '../promisify';
 
 
 // Interface for the structure of navigation items
@@ -58,25 +55,19 @@ admin.save = async function (data: NavigationItem[]): Promise<void> {
 
 	cache = null;
 	pubsub.publish('admin:navigation:save');
-	const ids: string[] = await db.getSortedSetRange('navigation:enabled', 0, -1);
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.deleteAll(ids.map(id => `navigation:enabled:${id}`));
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.setObjectBulk(bulkSet);
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.delete('navigation:enabled');
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 	await db.sortedSetAdd('navigation:enabled', order, order);
 };
 
-admin.getAdmin = async function (): Promise<{ enabled: NavigationItem[], available: NavigationItem[] }> {
-	const [enabled, available] = await Promise.all([
-		admin.get(),
-		getAvailable(),
-	]);
-	return { enabled: enabled, available: available };
-};
-
 const fieldsToEscape: (keyof NavigationItem)[] = ['iconClass', 'class', 'route', 'id', 'text', 'textClass', 'title'];
-
-admin.escapeFields = (navItems: NavigationItem[]): void => toggleEscape(navItems, true);
-admin.unescapeFields = (navItems: NavigationItem[]): void => toggleEscape(navItems, false);
 
 function toggleEscape(navItems: NavigationItem[], flag: boolean): void {
 	navItems.forEach((item) => {
@@ -90,16 +81,21 @@ function toggleEscape(navItems: NavigationItem[], flag: boolean): void {
 	});
 }
 
+admin.escapeFields = (navItems: NavigationItem[]): void => toggleEscape(navItems, true);
+admin.unescapeFields = (navItems: NavigationItem[]): void => toggleEscape(navItems, false);
+
 admin.get = async function (): Promise<NavigationItem[]> {
 	if (cache) {
 		return cache.map(item => ({ ...item }));
 	}
-	const ids: string[] = await db.getSortedSetRange('navigation:enabled', 0, -1);
-	const data: NavigationItem[] = await db.getObjects(ids.map(id => `navigation:enabled:${id}`));
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+	const ids = await db.getSortedSetRange('navigation:enabled', 0, -1) as string[];
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+	const data = await db.getObjects(ids.map(id => `navigation:enabled:${id}`)) as NavigationItem[];
 	cache = data.filter(Boolean).map((item) => {
 		if (item.hasOwnProperty('groups')) {
 			try {
-				item.groups = JSON.parse(item.groups as string);
+				item.groups = JSON.parse(item.groups as string) as string[];
 			} catch (err) {
 				if (err instanceof Error) {
 					winston.error(err.stack);
@@ -127,7 +123,8 @@ async function getAvailable(): Promise<NavigationItem[]> {
 		return item;
 	});
 
-	const navItems: NavigationItem[] = await plugins.hooks.fire('filter:navigation.available', core);
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+	const navItems = await plugins.hooks.fire('filter:navigation.available', core) as NavigationItem[];
 	navItems.forEach((item) => {
 		if (item && !item.hasOwnProperty('enabled')) {
 			item.enabled = true;
@@ -136,7 +133,16 @@ async function getAvailable(): Promise<NavigationItem[]> {
 	return navItems;
 }
 
-require('../promisify')(admin);
+admin.getAdmin = async function (): Promise<{ enabled: NavigationItem[], available: NavigationItem[] }> {
+	const [enabled, available] = await Promise.all([
+		admin.get(),
+		getAvailable(),
+	]);
+	return { enabled: enabled, available: available };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+promisify(admin);
 
 module.exports = admin;
 
