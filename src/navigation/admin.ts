@@ -63,18 +63,7 @@ admin.save = async function (data: NavigationItem[]): Promise<void> {
 	await db.sortedSetAdd('navigation:enabled', order, order);
 };
 
-admin.getAdmin = async function () {
-	const [enabled, available] = await Promise.all([
-		admin.get(),
-		getAvailable(),
-	]);
-	return { enabled: enabled, available: available };
-};
-
 const fieldsToEscape = ['iconClass', 'class', 'route', 'id', 'text', 'textClass', 'title'];
-
-admin.escapeFields = navItems => toggleEscape(navItems, true);
-admin.unescapeFields = navItems => toggleEscape(navItems, false);
 
 function toggleEscape(navItems, flag) {
 	navItems.forEach((item) => {
@@ -87,6 +76,9 @@ function toggleEscape(navItems, flag) {
 		}
 	});
 }
+
+admin.escapeFields = navItems => toggleEscape(navItems, true);
+admin.unescapeFields = navItems => toggleEscape(navItems, false);
 
 admin.get = async function () {
 	if (cache) {
@@ -129,6 +121,15 @@ async function getAvailable() {
 	});
 	return navItems;
 }
+
+admin.getAdmin = async function () {
+	const [enabled, available] = await Promise.all([
+		admin.get(),
+		getAvailable(),
+	]);
+	return { enabled: enabled, available: available };
+};
+
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 promisify(admin);

@@ -49,18 +49,7 @@ admin.save = function (data) {
         yield database_1.default.sortedSetAdd('navigation:enabled', order, order);
     });
 };
-admin.getAdmin = function () {
-    return __awaiter(this, void 0, void 0, function* () {
-        const [enabled, available] = yield Promise.all([
-            admin.get(),
-            getAvailable(),
-        ]);
-        return { enabled: enabled, available: available };
-    });
-};
 const fieldsToEscape = ['iconClass', 'class', 'route', 'id', 'text', 'textClass', 'title'];
-admin.escapeFields = navItems => toggleEscape(navItems, true);
-admin.unescapeFields = navItems => toggleEscape(navItems, false);
 function toggleEscape(navItems, flag) {
     navItems.forEach((item) => {
         if (item) {
@@ -72,6 +61,8 @@ function toggleEscape(navItems, flag) {
         }
     });
 }
+admin.escapeFields = navItems => toggleEscape(navItems, true);
+admin.unescapeFields = navItems => toggleEscape(navItems, false);
 admin.get = function () {
     return __awaiter(this, void 0, void 0, function* () {
         if (cache) {
@@ -115,6 +106,15 @@ function getAvailable() {
         return navItems;
     });
 }
+admin.getAdmin = function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        const [enabled, available] = yield Promise.all([
+            admin.get(),
+            getAvailable(),
+        ]);
+        return { enabled: enabled, available: available };
+    });
+};
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 (0, promisify_1.default)(admin);
 module.exports = admin;
