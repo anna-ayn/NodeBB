@@ -12,13 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable import/no-import-module-exports */
 const validator_1 = __importDefault(require("validator"));
 const winston_1 = __importDefault(require("winston"));
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const plugins_1 = __importDefault(require("../plugins"));
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const database_1 = __importDefault(require("../database"));
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const pubsub_1 = __importDefault(require("../pubsub"));
 const admin = {};
 let cache = null;

@@ -1,10 +1,8 @@
+/* eslint-disable import/no-import-module-exports */
 import validator from 'validator';
 import winston from 'winston';
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 import plugins from '../plugins';
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 import db from '../database';
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 import pubsub from '../pubsub';
 
 // Interface for the structure of navigation items
