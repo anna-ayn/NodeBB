@@ -65,7 +65,7 @@ admin.save = async function (data: NavigationItem[]): Promise<void> {
 
 const fieldsToEscape = ['iconClass', 'class', 'route', 'id', 'text', 'textClass', 'title'];
 
-function toggleEscape(navItems, flag) {
+function toggleEscape(navItems: NavigationItem[], flag: boolean): void {
 	navItems.forEach((item) => {
 		if (item) {
 			fieldsToEscape.forEach((field) => {
